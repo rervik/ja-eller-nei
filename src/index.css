@@ -14,7 +14,11 @@ html, body, #root {
 }
 
 body {
-  background: linear-gradient(135deg, #6d28d9 0%, #db2777 50%, #f97316 100%);
+  background:
+    radial-gradient(1200px 800px at 20% -10%, #2a0e4a 0%, transparent 60%),
+    radial-gradient(1000px 700px at 90% 110%, #3a0d2e 0%, transparent 55%),
+    #0a0612;
   background-attachment: fixed;
   color: #fff;
+  overflow-x: hidden;
 }
