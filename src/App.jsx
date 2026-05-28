@@ -2,142 +2,139 @@ import { useCallback, useRef, useState } from 'react'
 import { useSound } from './useSound'
 import './App.css'
 
-const TEASES = [
-  'Nope! 😏',
-  'For treg! 🏃',
-  'Prøv igjen 👀',
-  'Bom! 🎯',
-  'Haha, nei 🙅',
-  'Aldri i livet 😆',
-  'Du bommet! 💨',
-  'Nesten! ...ikke 😜',
-  'Catch me! 🦋',
-  'Hihi 🫣',
-]
+const HEARTS = ['❤️', '💖', '💕', '💗', '💓', '😘', '💞', '🌹']
 
-function HeartConfetti() {
+function HeartFall() {
   return (
-    <div className="confetti" aria-hidden="true">
-      {Array.from({ length: 80 }).map((_, i) => (
+    <div className="hearts" aria-hidden="true">
+      {Array.from({ length: 70 }).map((_, i) => (
         <span
           key={i}
-          className="heart"
           style={{
             left: `${Math.random() * 100}%`,
-            fontSize: `${14 + Math.random() * 28}px`,
-            animationDelay: `${Math.random() * 3}s`,
-            animationDuration: `${2.5 + Math.random() * 3}s`,
+            fontSize: `${14 + Math.random() * 30}px`,
+            animationDelay: `${Math.random() * 3.5}s`,
+            animationDuration: `${3 + Math.random() * 3}s`,
           }}
         >
-          {['❤️', '💖', '💕', '💗', '💓', '😘', '💞'][i % 7]}
+          {HEARTS[i % HEARTS.length]}
         </span>
       ))}
     </div>
   )
 }
 
-function Orbs() {
-  return (
-    <div className="orbs" aria-hidden="true">
-      <span className="orb orb-1" />
-      <span className="orb orb-2" />
-      <span className="orb orb-3" />
-    </div>
-  )
-}
-
 function App() {
   const [yes, setYes] = useState(false)
-  const [noStyle, setNoStyle] = useState({})
+  const [noStyle, setNoStyle] = useState(null)
   const [dodges, setDodges] = useState(0)
-  const [tease, setTease] = useState('Nei')
-  const teaseIndex = useRef(0)
   const { playDodge, playYes } = useSound()
 
   const dodge = useCallback(() => {
-    const padding = 40
-    const btnW = 160
-    const btnH = 66
-    const maxX = window.innerWidth - btnW - padding
-    const maxY = window.innerHeight - btnH - padding
-    const x = padding + Math.random() * Math.max(0, maxX - padding)
-    const y = padding + Math.random() * Math.max(0, maxY - padding)
+    const vw = window.innerWidth
+    const vh = window.innerHeight
+    const btnW = 150
+    const btnH = 60
+    const margin = 16
+    const x = margin + Math.random() * Math.max(0, vw - btnW - margin * 2)
+    const y = margin + Math.random() * Math.max(0, vh - btnH - margin * 2)
 
     setNoStyle({
       position: 'fixed',
       left: `${x}px`,
       top: `${y}px`,
-      transform: `rotate(${(Math.random() - 0.5) * 36}deg) scale(${0.9 + Math.random() * 0.25})`,
+      transform: `rotate(${(Math.random() - 0.5) * 24}deg)`,
     })
-
-    teaseIndex.current = (teaseIndex.current + 1) % TEASES.length
-    setTease(TEASES[teaseIndex.current])
     setDodges((d) => d + 1)
     playDodge()
+
+    // Vibrasjon på mobil
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      navigator.vibrate([18, 12, 28])
+    }
   }, [playDodge])
 
   const sayYes = useCallback(() => {
     playYes()
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      navigator.vibrate([12, 30, 12, 30, 80])
+    }
     setYes(true)
   }, [playYes])
 
   const reset = useCallback(() => {
     setYes(false)
     setDodges(0)
-    setTease('Nei')
-    setNoStyle({})
+    setNoStyle(null)
   }, [])
 
   if (yes) {
     return (
-      <main className="stage celebrate">
-        <Orbs />
-        <HeartConfetti />
-        <div className="flash" aria-hidden="true" />
-        <div className="card glow">
-          <div className="emoji-burst">😍</div>
-          <h1 className="title">Tusen takk, Merethe!</h1>
-          <p className="subtitle">Du er rett og slett best 💖 Gleder meg til i kveld 😏</p>
-          <button className="btn yes" onClick={reset}>
-            Spør igjen 🔁
+      <main className="scene">
+        <div className="aura" aria-hidden="true" />
+        <HeartFall />
+        <section className="yes-screen">
+          <span className="kicker">svaret er ja 💋</span>
+          <h1 className="answer">
+            Tusen takk,
+            <em> Merethe</em>
+          </h1>
+          <p className="lead">Visste det 😏 Gleder meg til i kveld.</p>
+          <button className="link-btn" onClick={reset}>
+            spør igjen ↺
           </button>
-        </div>
+        </section>
       </main>
     )
   }
 
   return (
-    <main className="stage">
-      <Orbs />
-      <div className="card glow">
-        <h1 className="title">Hei Merethe, kan jeg få en BJ i kveld? 🥺</h1>
-        <p className="subtitle">
-          {dodges === 0
-            ? 'Velg ærlig 👇'
-            : `Du har bommet på "Nei" ${dodges} ${dodges === 1 ? 'gang' : 'ganger'} 😂`}
-        </p>
+    <main className="scene">
+      <div className="aura" aria-hidden="true" />
+      <div className="grain" aria-hidden="true" />
 
-        <div className="buttons">
-          <button className="btn yes pulse" onClick={sayYes}>
-            Ja 😍
+      <section className="ask">
+        <span className="kicker">et veldig viktig spørsmål</span>
+        <h1 className="question">
+          Hei Merethe — kan jeg få en
+          <em> BJ</em> i kveld?
+        </h1>
+
+        <div className="actions">
+          <button className="cta" onClick={sayYes}>
+            <span>Ja</span>
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+              <path
+                d="M5 12h14M13 6l6 6-6 6"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
           </button>
 
           <button
-            className="btn no"
-            style={noStyle}
+            className="ghost"
+            style={noStyle ?? undefined}
             onMouseEnter={dodge}
-            onMouseDown={dodge}
-            onTouchStart={(e) => {
+            onPointerDown={(e) => {
               e.preventDefault()
               dodge()
             }}
             onClick={dodge}
           >
-            {tease}
+            Nei
           </button>
         </div>
-      </div>
-      <footer className="footer">🔊 Skru på lyden · «Nei» er litt sjenert 🫣</footer>
+
+        <p className="hint">
+          {dodges === 0
+            ? '🔊 lyd på · prøv å trykke «Nei» 😉'
+            : `«Nei» glapp unna ${dodges} ${dodges === 1 ? 'gang' : 'ganger'} 🫣`}
+        </p>
+      </section>
     </main>
   )
 }

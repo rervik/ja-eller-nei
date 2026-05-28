@@ -1,248 +1,218 @@
-.stage {
-  min-height: 100vh;
+.scene {
+  position: relative;
+  min-height: 100dvh;
   display: grid;
   place-items: center;
-  position: relative;
+  padding: clamp(24px, 7vw, 80px);
   overflow: hidden;
-  padding: 24px;
+  isolation: isolate;
 }
 
-/* ---------- Glødende orbs i bakgrunnen ---------- */
-.orbs {
+/* ---------- Atmosfære: glødende aura ---------- */
+.aura {
+  position: fixed;
+  inset: -30vmax;
+  z-index: -2;
+  background:
+    radial-gradient(38vmax 38vmax at 22% 18%, rgba(201, 72, 155, 0.55), transparent 60%),
+    radial-gradient(42vmax 42vmax at 82% 28%, rgba(255, 93, 143, 0.45), transparent 62%),
+    radial-gradient(46vmax 46vmax at 60% 92%, rgba(255, 179, 122, 0.38), transparent 60%);
+  filter: blur(20px) saturate(120%);
+  animation: drift 22s ease-in-out infinite alternate;
+}
+
+@keyframes drift {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(2vw, -3vh, 0) scale(1.08); }
+  100% { transform: translate3d(-2vw, 2vh, 0) scale(1.04); }
+}
+
+/* Filmkorn for tekstur */
+.grain {
   position: fixed;
   inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  filter: blur(60px);
-}
-
-.orb {
-  position: absolute;
-  border-radius: 50%;
-  opacity: 0.55;
-  mix-blend-mode: screen;
-  animation: float 14s ease-in-out infinite;
-}
-
-.orb-1 {
-  width: 460px;
-  height: 460px;
-  background: radial-gradient(circle, #ff2db4, transparent 70%);
-  top: -120px;
-  left: -100px;
-}
-
-.orb-2 {
-  width: 520px;
-  height: 520px;
-  background: radial-gradient(circle, #7c3aed, transparent 70%);
-  bottom: -160px;
-  right: -120px;
-  animation-delay: -4s;
-}
-
-.orb-3 {
-  width: 380px;
-  height: 380px;
-  background: radial-gradient(circle, #06b6d4, transparent 70%);
-  top: 40%;
-  left: 55%;
-  animation-delay: -8s;
-}
-
-@keyframes float {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(60px, -50px) scale(1.12); }
-  66% { transform: translate(-40px, 40px) scale(0.94); }
-}
-
-/* ---------- Glasskort med neon-glød ---------- */
-.card {
-  position: relative;
-  z-index: 2;
-  text-align: center;
-  background: rgba(20, 12, 40, 0.45);
-  backdrop-filter: blur(22px) saturate(140%);
-  -webkit-backdrop-filter: blur(22px) saturate(140%);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 30px;
-  padding: clamp(30px, 6vw, 60px);
-  max-width: 580px;
-  width: 100%;
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.12);
-}
-
-/* Roterende neon-kant */
-.card.glow::before {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  border-radius: 32px;
-  padding: 2px;
-  background: conic-gradient(from 0deg, #ff2db4, #7c3aed, #06b6d4, #f97316, #ff2db4);
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  mask-composite: exclude;
-  animation: spin 6s linear infinite;
   z-index: -1;
+  pointer-events: none;
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
+/* ---------- Spørsmål ---------- */
+.ask,
+.yes-screen {
+  position: relative;
+  z-index: 1;
+  max-width: 760px;
+  width: 100%;
+  text-align: center;
 }
 
-.title {
-  font-size: clamp(1.6rem, 4.6vw, 2.7rem);
-  font-weight: 900;
-  line-height: 1.12;
+.kicker {
+  display: inline-block;
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 8px 16px;
+  border: 1px solid rgba(247, 236, 233, 0.16);
+  border-radius: 999px;
+  backdrop-filter: blur(6px);
+  animation: rise 0.7s 0.05s both cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.question,
+.answer {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(2.6rem, 9vw, 5.2rem);
+  line-height: 1.02;
   letter-spacing: -0.02em;
-  margin: 0 0 14px;
-  background: linear-gradient(90deg, #fff, #ffd6f0, #d9c6ff, #fff);
-  background-size: 300% auto;
+  margin: clamp(20px, 4vw, 34px) 0 clamp(34px, 6vw, 52px);
+  text-wrap: balance;
+  animation: rise 0.9s 0.12s both cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.question em,
+.answer em {
+  font-style: italic;
+  font-weight: 500;
+  background: linear-gradient(105deg, var(--amber), var(--rose) 55%, var(--magenta));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  animation: shimmer 5s linear infinite;
-  text-shadow: 0 0 30px rgba(255, 45, 180, 0.25);
-}
-
-@keyframes shimmer {
-  to { background-position: 300% center; }
-}
-
-.subtitle {
-  font-size: clamp(1rem, 2.5vw, 1.25rem);
-  color: rgba(255, 255, 255, 0.85);
-  margin: 0 0 34px;
-  min-height: 1.5em;
 }
 
 /* ---------- Knapper ---------- */
-.buttons {
+.actions {
   display: flex;
   gap: 18px;
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
+  animation: rise 0.9s 0.2s both cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.btn {
-  font-size: 1.3rem;
-  font-weight: 800;
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--sans);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #1a0a10;
+  padding: 18px 34px;
   border: none;
   border-radius: 999px;
-  padding: 18px 42px;
   cursor: pointer;
-  color: #fff;
-  font-family: inherit;
-  white-space: nowrap;
-  transition: transform 0.12s ease, box-shadow 0.25s ease, filter 0.25s ease;
+  background: linear-gradient(135deg, #ffd0a8, var(--rose) 60%, var(--magenta));
+  box-shadow:
+    0 10px 40px rgba(255, 93, 143, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s;
+  animation: glow 3.4s ease-in-out infinite;
 }
 
-.btn:active { transform: scale(0.95); }
+.cta svg { transition: transform 0.25s; }
+.cta:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 16px 54px rgba(255, 93, 143, 0.6); }
+.cta:hover svg { transform: translateX(4px); }
+.cta:active { transform: scale(0.97); }
 
-.btn.yes {
-  background: linear-gradient(135deg, #22c55e, #15a34a);
-  box-shadow: 0 10px 30px rgba(34, 197, 94, 0.55), 0 0 0 0 rgba(34, 197, 94, 0.5);
+@keyframes glow {
+  0%, 100% { box-shadow: 0 10px 40px rgba(255, 93, 143, 0.4), inset 0 1px 0 rgba(255,255,255,0.4); }
+  50% { box-shadow: 0 14px 56px rgba(201, 72, 155, 0.6), inset 0 1px 0 rgba(255,255,255,0.4); }
 }
 
-.btn.yes:hover {
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 18px 44px rgba(34, 197, 94, 0.7);
-}
-
-.btn.yes.pulse {
-  animation: pulse 1.8s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { box-shadow: 0 10px 30px rgba(34, 197, 94, 0.55), 0 0 0 0 rgba(34, 197, 94, 0.45); }
-  50% { box-shadow: 0 10px 30px rgba(34, 197, 94, 0.55), 0 0 0 16px rgba(34, 197, 94, 0); }
-}
-
-.btn.no {
-  background: linear-gradient(135deg, #ef4444, #dc2626);
-  box-shadow: 0 10px 30px rgba(239, 68, 68, 0.55);
-  min-width: 160px;
+.ghost {
+  font-family: var(--sans);
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--muted);
+  padding: 16px 30px;
+  min-width: 110px;
+  border: 1px solid rgba(247, 236, 233, 0.22);
+  border-radius: 999px;
+  background: rgba(247, 236, 233, 0.03);
+  backdrop-filter: blur(8px);
+  cursor: pointer;
   z-index: 5;
-  transition: left 0.18s cubic-bezier(.34,1.56,.64,1), top 0.18s cubic-bezier(.34,1.56,.64,1), transform 0.18s ease;
+  transition:
+    left 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
+    top 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
+    transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
+    color 0.2s, border-color 0.2s;
 }
 
-.footer {
-  position: fixed;
-  bottom: 18px;
-  left: 0;
-  right: 0;
-  text-align: center;
-  color: rgba(255, 255, 255, 0.55);
-  font-size: 0.92rem;
-  z-index: 1;
+.ghost:hover { color: var(--ink); border-color: rgba(247, 236, 233, 0.4); }
+
+.hint {
+  margin-top: clamp(28px, 6vw, 44px);
+  font-size: 0.9rem;
+  color: var(--muted);
+  animation: rise 0.9s 0.3s both cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-/* ---------- Feiring ---------- */
-.celebrate .title { animation: pop 0.55s ease, shimmer 5s linear infinite; }
+/* ---------- Ja-skjerm ---------- */
+.yes-screen .answer { margin-bottom: clamp(16px, 3vw, 22px); }
 
-.emoji-burst {
-  font-size: clamp(3rem, 12vw, 5rem);
-  margin-bottom: 8px;
-  animation: burst 0.7s cubic-bezier(.34,1.56,.64,1);
+.lead {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.1rem, 3.4vw, 1.5rem);
+  color: rgba(247, 236, 233, 0.78);
+  margin-bottom: clamp(30px, 6vw, 44px);
+  animation: rise 0.9s 0.25s both cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-@keyframes burst {
-  0% { transform: scale(0) rotate(-30deg); opacity: 0; }
-  70% { transform: scale(1.25) rotate(8deg); }
-  100% { transform: scale(1) rotate(0); opacity: 1; }
+.link-btn {
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  transition: color 0.2s, letter-spacing 0.2s;
+  animation: rise 0.9s 0.35s both cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-@keyframes pop {
-  0% { transform: scale(0.5); opacity: 0; }
-  70% { transform: scale(1.1); }
-  100% { transform: scale(1); opacity: 1; }
-}
+.link-btn:hover { color: var(--ink); letter-spacing: 0.24em; }
 
-/* Lyst blink ved ja */
-.flash {
-  position: fixed;
-  inset: 0;
-  background: radial-gradient(circle, rgba(255,255,255,0.7), transparent 60%);
-  pointer-events: none;
-  z-index: 3;
-  animation: flash 0.6s ease-out forwards;
-}
-
-@keyframes flash {
-  0% { opacity: 0.9; }
-  100% { opacity: 0; }
-}
-
-/* ---------- Hjerte-konfetti ---------- */
-.confetti {
+/* ---------- Hjerteregn ---------- */
+.hearts {
   position: fixed;
   inset: 0;
+  z-index: 0;
   pointer-events: none;
-  z-index: 1;
 }
 
-.confetti .heart {
+.hearts span {
   position: absolute;
-  top: -10vh;
+  top: -12vh;
   line-height: 1;
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.35));
   animation-name: fall;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
-  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.25));
 }
 
 @keyframes fall {
-  0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
-  100% { transform: translateY(112vh) rotate(360deg); opacity: 0.95; }
+  0% { transform: translateY(-12vh) rotate(0deg); opacity: 0; }
+  10% { opacity: 1; }
+  100% { transform: translateY(118vh) rotate(360deg); opacity: 0.9; }
 }
 
-@media (max-width: 480px) {
-  .btn { padding: 16px 32px; font-size: 1.15rem; }
+@keyframes rise {
+  from { opacity: 0; transform: translateY(22px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .orb, .title, .btn.yes.pulse, .card.glow::before { animation: none; }
+  .aura, .cta { animation: none; }
+  .kicker, .question, .answer, .actions, .hint, .lead, .link-btn { animation: none; }
 }

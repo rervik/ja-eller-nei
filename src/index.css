@@ -1,24 +1,40 @@
 :root {
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-  line-height: 1.5;
+  --bg: #0c0608;
+  --ink: #f7ece9;
+  --muted: rgba(247, 236, 233, 0.55);
+  --rose: #ff5d8f;
+  --amber: #ffb37a;
+  --magenta: #c9489b;
+  --serif: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --sans: 'Space Grotesk', system-ui, sans-serif;
+
+  color-scheme: dark;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-html, body, #root {
-  margin: 0;
-  min-height: 100vh;
+html,
+body,
+#root {
+  min-height: 100%;
+  min-height: 100dvh;
 }
 
 body {
-  background:
-    radial-gradient(1200px 800px at 20% -10%, #2a0e4a 0%, transparent 60%),
-    radial-gradient(1000px 700px at 90% 110%, #3a0d2e 0%, transparent 55%),
-    #0a0612;
-  background-attachment: fixed;
-  color: #fff;
-  overflow-x: hidden;
+  font-family: var(--sans);
+  color: var(--ink);
+  background: var(--bg);
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: var(--rose);
+  color: #1a0a10;
 }
