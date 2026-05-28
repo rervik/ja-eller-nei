@@ -31,33 +31,51 @@ function App() {
   const noRef = useRef(null)
   const { playDodge, playYes } = useSound()
 
-  const dodge = useCallback(() => {
+  const dodge = useCallback((e) => {
     // Synlig område (visualViewport tar høyde for mobil-nettleserens linjer)
     const vv = window.visualViewport
     const vw = vv ? vv.width : window.innerWidth
     const vh = vv ? vv.height : window.innerHeight
 
-    // Mål knappens faktiske størrelse så den aldri klippes på kanten
+    // Knappens faktiske mål så den aldri klippes på kanten
     const rect = noRef.current?.getBoundingClientRect()
     const btnW = rect?.width || 120
     const btnH = rect?.height || 56
-    const margin = 16
+    const margin = 14
 
-    // Klamp hardt innenfor synlig område
     const minX = margin
     const maxX = Math.max(minX, vw - btnW - margin)
     const minY = margin
     const maxY = Math.max(minY, vh - btnH - margin)
-    const x = Math.min(maxX, Math.max(minX, minX + Math.random() * (maxX - minX)))
-    const y = Math.min(maxY, Math.max(minY, minY + Math.random() * (maxY - minY)))
+    const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v))
+
+    // Hvor er fingeren/musa nå?
+    const cx = e?.clientX ?? (rect ? rect.left + btnW / 2 : vw / 2)
+    const cy = e?.clientY ?? (rect ? rect.top + btnH / 2 : vh / 2)
+
+    // Smett et KORT stykke unna i en tilfeldig retning – men hold deg på skjermen.
+    // Prøv noen retninger og velg den som havner lengst fra fingeren (men nær nok til å være synlig).
+    const hop = 150 + Math.random() * 120 // 150–270 px
+    let best = null
+    let bestDist = -1
+    for (let i = 0; i < 8; i++) {
+      const ang = Math.random() * Math.PI * 2
+      const nx = clamp(cx - btnW / 2 + Math.cos(ang) * hop, minX, maxX)
+      const ny = clamp(cy - btnH / 2 + Math.sin(ang) * hop, minY, maxY)
+      const d = Math.hypot(nx + btnW / 2 - cx, ny + btnH / 2 - cy)
+      if (d > bestDist) {
+        bestDist = d
+        best = { nx, ny }
+      }
+    }
 
     setNoStyle({
       position: 'fixed',
-      left: `${x}px`,
-      top: `${y}px`,
+      left: `${best.nx}px`,
+      top: `${best.ny}px`,
       margin: 0,
       zIndex: 100,
-      transform: `rotate(${(Math.random() - 0.5) * 18}deg)`,
+      transform: `rotate(${(Math.random() - 0.5) * 16}deg)`,
     })
     setDodges((d) => d + 1)
     playDodge()
