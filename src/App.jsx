@@ -1,4 +1,5 @@
 import { useCallback, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { useSound } from './useSound'
 import './App.css'
 
@@ -147,20 +148,42 @@ function App() {
             </svg>
           </button>
 
-          <button
-            ref={noRef}
-            className="ghost"
-            style={noStyle ?? undefined}
-            onMouseEnter={dodge}
-            onPointerDown={(e) => {
-              e.preventDefault()
-              dodge()
-            }}
-            onClick={dodge}
-          >
-            Nei
-          </button>
+          {!noStyle && (
+            <button
+              ref={noRef}
+              className="ghost"
+              onMouseEnter={dodge}
+              onPointerDown={(e) => {
+                e.preventDefault()
+                dodge(e)
+              }}
+              onClick={dodge}
+            >
+              Nei
+            </button>
+          )}
         </div>
+
+        {/* Når knappen flykter rendres den i en portal på <body> slik at
+            position:fixed blir ekte skjerm-relativt (forelder-transform
+            fra rise-animasjonene ville ellers forskyve den ut av syne). */}
+        {noStyle &&
+          createPortal(
+            <button
+              ref={noRef}
+              className="ghost"
+              style={noStyle}
+              onMouseEnter={dodge}
+              onPointerDown={(e) => {
+                e.preventDefault()
+                dodge(e)
+              }}
+              onClick={dodge}
+            >
+              Nei
+            </button>,
+            document.body
+          )}
 
         <p className="hint">
           {dodges === 0
