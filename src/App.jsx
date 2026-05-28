@@ -28,22 +28,34 @@ function App() {
   const [yes, setYes] = useState(false)
   const [noStyle, setNoStyle] = useState(null)
   const [dodges, setDodges] = useState(0)
+  const noRef = useRef(null)
   const { playDodge, playYes } = useSound()
 
   const dodge = useCallback(() => {
-    const vw = window.innerWidth
-    const vh = window.innerHeight
-    const btnW = 150
-    const btnH = 60
-    const margin = 16
-    const x = margin + Math.random() * Math.max(0, vw - btnW - margin * 2)
-    const y = margin + Math.random() * Math.max(0, vh - btnH - margin * 2)
+    // Synlig område (visualViewport tar høyde for mobil-nettleserens linjer)
+    const vv = window.visualViewport
+    const vw = vv ? vv.width : window.innerWidth
+    const vh = vv ? vv.height : window.innerHeight
+    const offX = vv ? vv.offsetLeft : 0
+    const offY = vv ? vv.offsetTop : 0
+
+    // Mål knappens faktiske størrelse så den aldri klippes på kanten
+    const rect = noRef.current?.getBoundingClientRect()
+    const btnW = rect?.width || 120
+    const btnH = rect?.height || 56
+    const margin = 14
+
+    const maxX = Math.max(0, vw - btnW - margin * 2)
+    const maxY = Math.max(0, vh - btnH - margin * 2)
+    const x = offX + margin + Math.random() * maxX
+    const y = offY + margin + Math.random() * maxY
 
     setNoStyle({
       position: 'fixed',
       left: `${x}px`,
       top: `${y}px`,
-      transform: `rotate(${(Math.random() - 0.5) * 24}deg)`,
+      zIndex: 50,
+      transform: `rotate(${(Math.random() - 0.5) * 22}deg)`,
     })
     setDodges((d) => d + 1)
     playDodge()
@@ -116,6 +128,7 @@ function App() {
           </button>
 
           <button
+            ref={noRef}
             className="ghost"
             style={noStyle ?? undefined}
             onMouseEnter={dodge}
