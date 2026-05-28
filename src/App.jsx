@@ -36,26 +36,28 @@ function App() {
     const vv = window.visualViewport
     const vw = vv ? vv.width : window.innerWidth
     const vh = vv ? vv.height : window.innerHeight
-    const offX = vv ? vv.offsetLeft : 0
-    const offY = vv ? vv.offsetTop : 0
 
     // Mål knappens faktiske størrelse så den aldri klippes på kanten
     const rect = noRef.current?.getBoundingClientRect()
     const btnW = rect?.width || 120
     const btnH = rect?.height || 56
-    const margin = 14
+    const margin = 16
 
-    const maxX = Math.max(0, vw - btnW - margin * 2)
-    const maxY = Math.max(0, vh - btnH - margin * 2)
-    const x = offX + margin + Math.random() * maxX
-    const y = offY + margin + Math.random() * maxY
+    // Klamp hardt innenfor synlig område
+    const minX = margin
+    const maxX = Math.max(minX, vw - btnW - margin)
+    const minY = margin
+    const maxY = Math.max(minY, vh - btnH - margin)
+    const x = Math.min(maxX, Math.max(minX, minX + Math.random() * (maxX - minX)))
+    const y = Math.min(maxY, Math.max(minY, minY + Math.random() * (maxY - minY)))
 
     setNoStyle({
       position: 'fixed',
       left: `${x}px`,
       top: `${y}px`,
-      zIndex: 50,
-      transform: `rotate(${(Math.random() - 0.5) * 22}deg)`,
+      margin: 0,
+      zIndex: 100,
+      transform: `rotate(${(Math.random() - 0.5) * 18}deg)`,
     })
     setDodges((d) => d + 1)
     playDodge()

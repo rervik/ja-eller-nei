@@ -127,25 +127,30 @@
 
 .ghost {
   font-family: var(--sans);
-  font-size: 1.05rem;
-  font-weight: 500;
-  color: var(--muted);
-  padding: 16px 30px;
-  min-width: 110px;
-  border: 1px solid rgba(247, 236, 233, 0.22);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--ink);
+  padding: 16px 34px;
+  min-width: 120px;
+  border: 1.5px solid rgba(247, 236, 233, 0.7);
   border-radius: 999px;
-  background: rgba(247, 236, 233, 0.03);
-  backdrop-filter: blur(8px);
+  background: rgba(20, 10, 16, 0.55);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
   cursor: pointer;
   z-index: 5;
   transition:
-    left 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
-    top 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
-    transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
-    color 0.2s, border-color 0.2s;
+    left 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+    top 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+    transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+    color 0.2s, border-color 0.2s, background 0.2s;
 }
 
-.ghost:hover { color: var(--ink); border-color: rgba(247, 236, 233, 0.4); }
+.ghost:hover {
+  color: var(--bg);
+  background: var(--ink);
+  border-color: var(--ink);
+}
 
 .hint {
   margin-top: clamp(28px, 6vw, 44px);
