@@ -129,8 +129,8 @@ function App() {
       <section className="ask">
         <span className="kicker">et veldig viktig spørsmål</span>
         <h1 className="question">
-          Hei Merethe — kan jeg få en
-          <em> BJ</em> i kveld?
+          Hei Merethe, blir det noe
+          <em> sengehygge</em> i kveld?
         </h1>
 
         <div className="actions">
