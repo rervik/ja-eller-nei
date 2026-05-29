@@ -185,11 +185,11 @@ function App() {
             document.body
           )}
 
-        <p className="hint">
-          {dodges === 0
-            ? '🔊 lyd på · prøv å trykke «Nei» 😉'
-            : `«Nei» glapp unna ${dodges} ${dodges === 1 ? 'gang' : 'ganger'} 🫣`}
-        </p>
+        {dodges > 0 && (
+          <p className="hint">
+            {`«Nei» glapp unna ${dodges} ${dodges === 1 ? 'gang' : 'ganger'} 🫣`}
+          </p>
+        )}
       </section>
     </main>
   )
