@@ -1,0 +1,115 @@
+.celebrate {
+  position: relative;
+  z-index: 1;
+  max-width: 780px;
+  width: 100%;
+  text-align: center;
+}
+
+/* 60ms stagger — nok til å lese som en kaskade, for lite til å føles tregt. */
+.celebrate .kicker { --rise-delay: 0ms; }
+
+.answer {
+  margin: clamp(22px, 4vw, 34px) 0 clamp(16px, 3vw, 22px);
+  --rise-delay: 60ms;
+}
+
+.celebrate .lead {
+  margin-bottom: clamp(30px, 6vw, 44px);
+  --rise-delay: 120ms;
+}
+
+.celebrate .link-btn { --rise-delay: 180ms; }
+
+/* ---------- Lysringen fra Ja-knappen ---------- */
+.bloom {
+  position: fixed;
+  z-index: 60;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.bloom__ring,
+.bloom__glow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 50%;
+  margin-left: -80px;
+  margin-top: -80px;
+  width: 160px;
+  height: 160px;
+}
+
+.bloom__ring {
+  border: 2px solid rgba(255, 196, 170, 0.9);
+  animation: bloom-ring 900ms var(--ease-out) forwards;
+}
+
+.bloom__glow {
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(255, 160, 150, 0.5) 0%,
+    rgba(255, 120, 150, 0.22) 42%,
+    transparent 72%
+  );
+  animation: bloom-glow 1100ms var(--ease-out) forwards;
+}
+
+/* Aldri fra scale(0) — ringen starter i knappens egen størrelse. */
+@keyframes bloom-ring {
+  from { transform: scale(0.35); opacity: 0.95; }
+  to { transform: scale(7); opacity: 0; }
+}
+
+@keyframes bloom-glow {
+  from { transform: scale(0.4); opacity: 0.85; }
+  to { transform: scale(3.6); opacity: 0; }
+}
+
+/* ---------- Hjerteregn ---------- */
+.hearts {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Ingen drop-shadow per hjerte: det ville vært ett filter per element,
+   hver frame. Dybden kommer fra størrelse, opasitet og fart i stedet. */
+.heart--far { z-index: 1; }
+.heart--mid { z-index: 2; }
+.heart--near { z-index: 3; }
+
+.heart {
+  position: absolute;
+  top: -14vh;
+  line-height: 1;
+  animation-name: fall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes fall {
+  from { transform: translate3d(0, -14vh, 0) rotate(0deg); }
+  to { transform: translate3d(0, 120vh, 0) rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bloom__ring,
+  .bloom__glow {
+    animation-name: bloom-fade;
+  }
+
+  @keyframes bloom-fade {
+    from { opacity: 0.5; }
+    to { opacity: 0; }
+  }
+
+  .heart {
+    top: auto;
+    animation: none;
+  }
+}

@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Agent-verktoy (skills installert med /skills) - ikke app-kode
+.agents/
+.claude/
+skills-lock.json

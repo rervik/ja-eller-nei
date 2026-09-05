@@ -1,0 +1,131 @@
+/* Typografiske primitiver delt mellom spørsmålet og svaret. */
+
+/* --- Inngangsbevegelse ---------------------------------------------------
+   Én kurve, én avstand, staggeret med --rise-delay. Alt som kommer inn på
+   siden bruker denne, slik at bevegelsen leses som ett system.            */
+.rise {
+  animation: rise var(--duration-cinema) var(--ease-out) both;
+  animation-delay: var(--rise-delay, 0ms);
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 22px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* --- Etikett -------------------------------------------------------------- */
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--sans);
+  font-size: var(--text-micro);
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 9px 18px 9px 15px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  backdrop-filter: blur(8px);
+}
+
+.kicker__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--rose);
+  box-shadow: 0 0 10px var(--rose);
+  animation: dot-pulse 2.4s var(--ease-in-out) infinite;
+}
+
+/* Kun opacity — ingen layout, ingen paint. */
+@keyframes dot-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* --- Display-overskrift --------------------------------------------------
+   Fraunces er valgt for sine variable akser; her brukes de faktisk.
+   opsz på maks gir de fine, høykontrasterte display-formene, og litt SOFT
+   runder av spissene så typen er varm i stedet for skarp.                 */
+.display {
+  font-family: var(--serif);
+  font-optical-sizing: auto;
+  font-variation-settings: 'opsz' 144, 'SOFT' 28, 'WONK' 1;
+  font-weight: 400;
+  font-size: var(--text-display);
+  line-height: 1.01;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.display em {
+  font-style: italic;
+  font-weight: 500;
+  font-variation-settings: 'opsz' 144, 'SOFT' 60, 'WONK' 1;
+  background: linear-gradient(102deg, var(--amber), var(--rose) 52%, var(--magenta));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* --- Ingress -------------------------------------------------------------- */
+.lead {
+  font-family: var(--serif);
+  font-style: italic;
+  font-optical-sizing: auto;
+  font-size: var(--text-lead);
+  line-height: 1.45;
+  color: rgba(248, 239, 235, 0.8);
+}
+
+/* --- Tekstlenke-knapp ----------------------------------------------------- */
+.link-btn {
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 12px 16px;
+  min-height: 44px;
+  transition: color var(--duration-base) var(--ease-out),
+    letter-spacing var(--duration-base) var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .link-btn:hover {
+    color: var(--ink);
+    letter-spacing: 0.24em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise {
+    animation-name: fade-only;
+  }
+
+  @keyframes fade-only {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .kicker__dot {
+    animation: none;
+  }
+
+  .link-btn:hover {
+    letter-spacing: 0.18em;
+  }
+}

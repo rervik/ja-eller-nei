@@ -1,0 +1,211 @@
+.ask {
+  position: relative;
+  z-index: 1;
+  max-width: 780px;
+  width: 100%;
+  text-align: center;
+  transition: opacity var(--duration-exit) var(--ease-out),
+    transform var(--duration-exit) var(--ease-out),
+    filter var(--duration-exit) var(--ease-out);
+}
+
+/* Spørsmålet trekker seg unna slik det kom inn. Uskarpheten er bevisst:
+   uten den ser man to distinkte tilstander overlappe i krysstoningen —
+   blur binder dem sammen til én bevegelse. */
+.scene[data-phase='parting'] .ask {
+  opacity: 0;
+  transform: scale(0.96);
+  filter: blur(6px);
+  pointer-events: none;
+}
+
+.ask .kicker {
+  --rise-delay: 60ms;
+}
+
+.question {
+  margin: clamp(22px, 4vw, 36px) 0 clamp(34px, 6vw, 52px);
+  --rise-delay: 150ms;
+}
+
+/* Ingen animasjon på .actions: en transform her ville flyttet plassholderen
+   Nei-knappen måles mot. Ja-knappen animerer i stedet for seg selv. */
+.actions {
+  display: flex;
+  gap: 18px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* ---------- Ja ---------- */
+.cta {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--sans);
+  font-size: 1.12rem;
+  font-weight: 600;
+  color: #1a0a10;
+  padding: 18px 34px;
+  min-height: 44px;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  background: linear-gradient(135deg, #ffd0a8, var(--rose) 58%, var(--magenta));
+  box-shadow:
+    0 10px 34px rgba(255, 93, 143, 0.34),
+    0 2px 8px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  transition: transform var(--duration-base) var(--ease-out),
+    box-shadow var(--duration-base) var(--ease-out);
+  --rise-delay: 240ms;
+}
+
+.cta__label,
+.cta svg {
+  position: relative;
+  z-index: 1;
+}
+
+.cta svg {
+  transition: transform var(--duration-base) var(--ease-out);
+}
+
+/* Spekulært sveip: ett lag som glir over knappen. Kun transform. */
+.cta__sheen {
+  position: absolute;
+  inset: 0;
+  transform: translate3d(-130%, 0, 0);
+  background: linear-gradient(
+    100deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.55) 50%,
+    transparent 80%
+  );
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cta:hover {
+    transform: translate3d(0, -3px, 0);
+    box-shadow:
+      0 18px 48px rgba(255, 93, 143, 0.46),
+      0 2px 8px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  }
+
+  .cta:hover svg {
+    transform: translate3d(4px, 0, 0);
+  }
+
+  .cta:hover .cta__sheen {
+    animation: sheen 700ms var(--ease-out);
+  }
+
+  .cta:hover:active {
+    transform: translate3d(0, -3px, 0) scale(0.97);
+  }
+}
+
+.cta:active {
+  transform: scale(0.97);
+  transition-duration: var(--duration-fast);
+}
+
+@keyframes sheen {
+  to { transform: translate3d(130%, 0, 0); }
+}
+
+/* ---------- Nei ---------- */
+
+/* Usynlig plassholder som reserverer plassen og definerer hvileposisjonen.
+   Må ha nøyaktig samme boksmodell som .no-btn. */
+.no-slot,
+.no-btn {
+  font-family: var(--sans);
+  font-size: 1.08rem;
+  font-weight: 600;
+  padding: 16px 34px;
+  min-width: 122px;
+  min-height: 44px;
+  border: 1.5px solid var(--border-strong);
+  border-radius: 999px;
+}
+
+.no-slot {
+  display: inline-block;
+  visibility: hidden;
+  line-height: 1.2;
+}
+
+/* Ankeret eier forflytningen. */
+.no-anchor {
+  position: fixed;
+  z-index: 100;
+  /* Forsinkelsen lar spørsmålet lande først. Opasiteten styres inline av
+     useDodge, så inntoningen kan avbrytes når som helst. */
+  transition: transform var(--duration-slow) var(--ease-spring),
+    opacity var(--duration-base) var(--ease-out) 320ms;
+}
+
+.no-anchor.is-leaving {
+  transition: transform var(--duration-slow) var(--ease-spring),
+    opacity var(--duration-exit) var(--ease-out);
+}
+
+/* Knappen eier sin egen form. */
+.no-btn {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  color: var(--ink);
+  background: rgba(22, 11, 18, 0.6);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  /* Raskere enn ankerets sprett: formen skal ha rukket å strekke seg og
+     falle tilbake i løpet av hoppet. */
+  transition: transform var(--duration-fast) var(--ease-out),
+    opacity var(--duration-base) var(--ease-out),
+    color var(--duration-base) var(--ease-out),
+    border-color var(--duration-base) var(--ease-out),
+    background var(--duration-base) var(--ease-out);
+}
+
+/* ---------- Teller ----------
+   Fast høyde: uten den ville teksten dukke opp, re-sentrere .ask vertikalt
+   og dermed flytte plassholderen Nei-knappen er forankret til. */
+.hint {
+  min-height: 1.5em;
+  margin-top: clamp(28px, 6vw, 44px);
+  font-size: var(--text-body);
+  color: var(--muted);
+  --rise-delay: 320ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .no-anchor,
+  .no-anchor.is-leaving {
+    transition: transform var(--duration-fast) var(--ease-out),
+      opacity var(--duration-base) var(--ease-out);
+  }
+
+  .no-btn {
+    transition: opacity var(--duration-base) var(--ease-out),
+      color var(--duration-base) var(--ease-out),
+      border-color var(--duration-base) var(--ease-out),
+      background var(--duration-base) var(--ease-out);
+  }
+
+  .cta:hover .cta__sheen {
+    animation: none;
+  }
+
+  .scene[data-phase='parting'] .ask {
+    transform: none;
+    filter: none;
+  }
+}

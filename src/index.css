@@ -1,16 +1,63 @@
+/* =========================================================================
+   Designtokens — farge, typografi, bevegelse.
+   Navnekonvensjonen for varighet/easing er delt med DOclaudepulse, men
+   kurveverdiene her er de sterke display-variantene: den appen er et crisp
+   dashboard, denne siden er romantisk, og bevegelsen skal matche stemningen.
+   ========================================================================= */
 :root {
-  --bg: #0c0608;
-  --ink: #f7ece9;
-  --muted: rgba(247, 236, 233, 0.55);
+  /* --- Farge ------------------------------------------------------------ */
+  --bg: #0a0509;
+  --bg-deep: #040204;
+  --ink: #f8efeb;
+  --muted: rgba(248, 239, 235, 0.56);
+  --faint: rgba(248, 239, 235, 0.34);
+
   --rose: #ff5d8f;
   --amber: #ffb37a;
   --magenta: #c9489b;
+  --plum: #6b1f52;
+
+  --surface: rgba(255, 255, 255, 0.055);
+  --surface-strong: rgba(255, 255, 255, 0.1);
+  --border: rgba(248, 239, 235, 0.14);
+  --border-strong: rgba(248, 239, 235, 0.3);
+
+  /* --- Typografi -------------------------------------------------------- */
   --serif: 'Fraunces', Georgia, 'Times New Roman', serif;
-  --sans: 'Space Grotesk', system-ui, sans-serif;
+  --sans: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+
+  --text-display: clamp(2.7rem, 9.4vw, 5.6rem);
+  --text-lead: clamp(1.05rem, 3.2vw, 1.45rem);
+  --text-body: clamp(0.9rem, 2.2vw, 0.98rem);
+  --text-micro: 0.7rem;
+
+  /* --- Bevegelse -------------------------------------------------------- */
+  --duration-instant: 90ms;
+  --duration-fast: 150ms;   /* trykk-feedback */
+  --duration-base: 200ms;   /* hover, farge */
+  --duration-slow: 300ms;   /* dodge-hopp */
+  --duration-exit: 260ms;   /* spørsmålet som trekker seg unna */
+  --duration-cinema: 620ms; /* KUN ja-øyeblikket */
+
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+
+  /* Fallback for nettlesere uten linear() — overstyres rett under. */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 
   color-scheme: dark;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+}
+
+/* Ekte fjærkurve uten bibliotek. Chrome 113+, Safari 17.2+, Firefox 112+. */
+@supports (transition-timing-function: linear(0, 1)) {
+  :root {
+    --ease-spring: linear(
+      0, 0.402 7.4%, 0.883 15.6%, 1.03, 1.117 23.4%, 1.132, 1.129,
+      1.111 32%, 1.032 40.4%, 0.994 48.5%, 0.996 58.4%, 1.001 78%, 1
+    );
+  }
 }
 
 * {
@@ -29,12 +76,38 @@ body,
 body {
   font-family: var(--sans);
   color: var(--ink);
-  background: var(--bg);
-  overflow: hidden;
+  background: var(--bg-deep);
+  /* Kun horisontal låsing: Nei-knappen kan smette langt ut sideveis, men
+     vertikal scroll må være mulig som sikkerhetsventil hvis overskriften
+     blir høy på små skjermer. */
+  overflow-x: hidden;
   -webkit-tap-highlight-color: transparent;
 }
 
 ::selection {
   background: var(--rose);
-  color: #1a0a10;
+  color: #14060d;
+}
+
+:focus-visible {
+  outline: 2px solid var(--rose);
+  outline-offset: 3px;
+  border-radius: 999px;
+}
+
+/* =========================================================================
+   Appens skall
+   ========================================================================= */
+.scene {
+  --pad: clamp(24px, 7vw, 80px);
+  position: relative;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding:
+    max(var(--pad), env(safe-area-inset-top))
+    max(var(--pad), env(safe-area-inset-right))
+    max(var(--pad), env(safe-area-inset-bottom))
+    max(var(--pad), env(safe-area-inset-left));
+  isolation: isolate;
 }
