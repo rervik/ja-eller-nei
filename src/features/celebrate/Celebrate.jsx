@@ -1,4 +1,5 @@
 import { HeartFall } from './HeartFall'
+import { LoveNote } from '../../shared/LoveNote'
 import './celebrate.css'
 import '../../shared/typography.css'
 
@@ -8,9 +9,10 @@ export function Celebrate({ onAgain, reduced }) {
     <>
       <HeartFall reduced={reduced} />
       <section className="celebrate">
+        <LoveNote />
         <span className="kicker rise">
           <span className="kicker__dot" aria-hidden="true" />
-          svaret er ja 💋
+          en liten avtale
         </span>
 
         <h1 className="display answer rise">
@@ -18,7 +20,7 @@ export function Celebrate({ onAgain, reduced }) {
           <em> Merethe</em>
         </h1>
 
-        <p className="lead rise">Visste det 😏 Gleder meg til i kveld.</p>
+        <p className="lead rise">Du gjorde nettopp dagen min litt finere.<br />Gleder meg til i kveld.</p>
 
         <button type="button" className="link-btn rise" onClick={onAgain}>
           spør igjen ↺

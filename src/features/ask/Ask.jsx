@@ -1,5 +1,6 @@
 import { useCallback } from 'react'
 import { NoButton } from './NoButton'
+import { LoveNote } from '../../shared/LoveNote'
 import { useDodge } from './useDodge'
 import './ask.css'
 import '../../shared/typography.css'
@@ -29,15 +30,18 @@ export function Ask({ onYes, onDodgeSound, reduced, leaving }) {
 
   return (
     <section className="ask">
+      <LoveNote />
       <span className="kicker rise">
         <span className="kicker__dot" aria-hidden="true" />
-        et veldig viktig spørsmål
+        bare til deg
       </span>
 
+      <p className="greeting rise">Hei, Merethe.</p>
       <h1 className="display question rise">
-        Hei Merethe, blir det noe
+        Blir det noe
         <em> sengehygge</em> i kveld?
       </h1>
+      <p className="question-caption rise">Et lite spørsmål. Med et håpefullt smil.</p>
 
       <div className="actions">
         <button type="button" className="cta rise" onClick={sayYes}>
@@ -63,7 +67,7 @@ export function Ask({ onYes, onDodgeSound, reduced, leaving }) {
       </div>
 
       <p className="hint rise" aria-live="polite">
-        {dodges > 0 && `«Nei» glapp unna ${dodges} ${dodges === 1 ? 'gang' : 'ganger'} 🫣`}
+        {dodges > 0 ? `«Nei» glapp unna ${dodges} ${dodges === 1 ? 'gang' : 'ganger'} 🫣` : 'Psst … den ene knappen er litt sjenert.'}
       </p>
 
       <NoButton

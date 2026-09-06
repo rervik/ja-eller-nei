@@ -5,6 +5,7 @@ import { Bloom } from './features/celebrate/Bloom'
 import { Celebrate } from './features/celebrate/Celebrate'
 import { useReducedMotion } from './shared/useReducedMotion'
 import { useSound } from './shared/useSound'
+import './modern.css'
 
 /* Må matche --duration-exit i index.css: spørsmålet skal være ute før
    svaret kommer inn, ellers overlapper de to tilstandene. */
@@ -48,6 +49,7 @@ export default function App() {
   return (
     <main className="scene" data-phase={phase}>
       <Atmosphere />
+      <header className="scene-header"><span>du + jeg<span className="brand-heart"> ♥</span></span><span>en liten invitasjon</span></header>
 
       {phase !== 'celebrating' && (
         <Ask
@@ -61,6 +63,7 @@ export default function App() {
       {phase !== 'asking' && <Bloom origin={origin} />}
 
       {phase === 'celebrating' && <Celebrate onAgain={again} reduced={reduced} />}
+      <footer className="scene-footer">laget med et smil <span aria-hidden="true">♡</span> ment for deg</footer>
     </main>
   )
 }
